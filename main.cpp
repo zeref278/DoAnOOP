@@ -28,6 +28,65 @@ using namespace std;
 #define xQuit 55
 #define yQuit 21
 
+
+void newgame()
+{
+	setTextColor(GREY);
+	//delete console
+	for (int x = 2; x <= WALL_RIGHT - 1; x++)
+	{
+		for (int y = 9; y <= WALL_DOWN-1; y++)
+		{
+			gotoXY(x, y);
+			cout << " ";
+		}
+	}
+	for (int i = 8; i <= WALL_DOWN; i++)
+	{
+		gotoXY(WALL_RIGHT / 2 + 2, i);
+		cout << char(219);
+	}
+	//2players
+
+	setTextColor(BLUE);
+	for (int i = 10; i <= 15; i++)
+	{
+		gotoXY(10, i);
+		cout << char(219);
+	}
+	for (int i = 15; i <= 20; i++)
+	{
+		gotoXY(50, i);
+		cout << char(219);
+	}
+	setTextColor(DARK_RED);
+	gotoXY(20, 15);
+	cout << "O";
+	setTextColor(GREEN);
+	gotoXY(25, 25);
+	cout << "2 PLAYERS";
+	//1player
+
+	setTextColor(BLUE);
+	for (int i = 10; i <= 15; i++)
+	{
+		gotoXY(70, i);
+		cout << char(219);
+	}
+	setTextColor(DARK_RED);
+	for (int i = 15; i <= 20; i++)
+	{
+		gotoXY(110, i);
+		cout << char(219);
+	}
+	setTextColor(DARK_RED);
+	gotoXY(80, 15);
+	cout << "O";
+	gotoXY(85, 25);
+	setTextColor(GREEN);
+	cout << "1 PLAYER";
+	getchar();
+}
 void draw()
 {
 	setTextColor(GREY);
@@ -66,16 +125,40 @@ void draw()
 		cout << char(176);
 	}
 
-	for (int i = 14; i <= 22;i++)
+	for (int i = 14; i <= 22; i++)
 	{
 		gotoXY(45, i);
 		cout << char(176);
 		gotoXY(77, i);
 		cout << char(176);
 	}
-	//
-	//
 
+	for (int i = 8; i <= 12; i++)
+	{
+		gotoXY(WALL_RIGHT / 2 + 2, i);
+		cout << char(219);
+	}
+	for (int i = 24; i <= WALL_DOWN; i++)
+	{
+		gotoXY(WALL_RIGHT / 2 + 2, i);
+		cout << char(219);
+	}
+	//
+	//
+	setTextColor(DARK_RED);
+	for (int i = 10; i <= 15; i++)
+	{
+		gotoXY(10, i);
+		cout << char(219);
+	}
+	for (int i = 15; i <= 20; i++)
+	{
+		gotoXY(110, i);
+		cout << char(219);
+	}
+	setTextColor(GREY);
+	//
+	//
 	noCursorType();
 	FixConsoleWindow();
 
@@ -88,7 +171,7 @@ void draw()
 	while (!fileTitle.eof())
 	{
 		char lineTemp[255] = "";
-		fileTitle.getline(lineTemp,255);
+		fileTitle.getline(lineTemp, 255);
 		gotoXY(xTitle, yTitle);
 		cout << lineTemp << endl;
 		yTitle++;
@@ -111,11 +194,19 @@ void draw()
 	int  curPosPointer = yPointer;
 	char keyPressed;
 
-	while (true)
+	int xBall = 20;
+	int yBall = 10;
+	bool flag = true;
+	while (flag)
 	{
 		setTextColor(DARK_RED);
 		gotoXY(70, curPosPointer);
 		cout << "<<<";
+
+		
+
+		gotoXY(xBall, yBall);
+		cout << "O";
 
 		keyPressed = _getch();
 
@@ -124,7 +215,7 @@ void draw()
 			{
 				gotoXY(xPointer, curPosPointer);
 				cout << "   ";
-				curPosPointer -=2;
+				curPosPointer -= 2;
 			}
 
 		if (keyPressed == 's' || keyPressed == 'S')
@@ -132,20 +223,24 @@ void draw()
 			{
 				gotoXY(xPointer, curPosPointer);
 				cout << "   ";
-				curPosPointer +=2;
+				curPosPointer += 2;
 			}
-
+		if (int(keyPressed) == 13)
+		{
+			if (curPosPointer == yNewgame)
+			{
+				flag = false;
+				newgame();
+			}
+		}
 		if (keyPressed == 'e')
-			break;
 		{
 			system("cls");
+			break;
+
 		}
 
 	}
-	
-}
-void drawPlay()
-{
 
 }
 int main()
