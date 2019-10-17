@@ -1,7 +1,9 @@
 #include "functionConsole.h"
-#include <stdio.h>
-#include <conio.h>
-#include <windows.h>
+#include "stdlib.h"
+#include "iostream"
+#include "windows.h"
+#include "stdio.h"
+
 void noCursorType()
 {
 	CONSOLE_CURSOR_INFO info;
