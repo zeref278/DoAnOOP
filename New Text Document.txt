@@ -1,0 +1,18 @@
+if (ball.x < SCREEN_LEFT)
+	{
+		if (abs(ball.headingX) < 2)
+		{
+			displayYouMissed();
+			ball.x = 75;
+			ball.y = 15;
+			computersScore += 10;
+		}
+		else if (!(float(ball.headingY * PlayersPad.x - ball.headingY * ball.x + ball.headingX * ball.y) / float(ball.headingX) >= PlayersPad.LEFT && 
+			float(ball.headingY * PlayersPad.x - ball.headingY * ball.x + ball.headingX * ball.y) / float(ball.headingX) <= PlayersPad.RIGHT ))
+		{
+			displayYouMissed();
+			ball.x = 75;
+			ball.y = 15;
+			computersScore += 10;
+		}
+	}
