@@ -43,7 +43,6 @@ void Game::removeBall()
 	txtPlot(ball.x, ball.y, 0);
 	txtLine(PlayersPad.x, PlayersPad.y, PlayersPad.x, PlayersPad.y + 3, 0);
 	txtLine(computersPad.x, computersPad.y, computersPad.x, computersPad.y + 3, 0);
-
 }
 //
 void Game::gameLogic()
@@ -65,14 +64,15 @@ void Game::gameLogic()
 	/* check if ball lands on pad, if true bounce back */
 	if ((ball.y >= PlayersPad.LEFT) && (ball.y <= PlayersPad.RIGHT) && (ball.x == PlayersPad.x))
 	{
-		ball.headingX += ball.headingX * 0.1;
+
 		ball.headingX = -ball.headingX;
 		playersScore += 10;
+		count /= 0.9;
 	}
 
 	if ((ball.y >= computersPad.LEFT) && (ball.y <= computersPad.RIGHT) && (ball.x == computersPad.x))
 	{
-		ball.headingX += ball.headingX * 0.1;
+
 		ball.headingX = -ball.headingX;
 		computersScore += 10;
 	}
@@ -89,6 +89,7 @@ void Game::gameLogic()
 		}
 	}
 
+
 	/* check if ball misses pad, if true display you missed */
 	if (ball.x < SCREEN_LEFT)
 	{
@@ -96,9 +97,11 @@ void Game::gameLogic()
 		ball.x = 75;
 		ball.y = 15;
 		computersScore += 10;
+
 	}
-	if (ball.x > SCREEN_RIGHT+1)
+	if (ball.x > SCREEN_RIGHT + 1)
 	{
+	
 		displayYouMissed();
 		ball.x = 15;
 		ball.y = 15;
@@ -115,13 +118,12 @@ void  Game::initGame()
 	ball.y = 5;
 	ball.headingX = 1;
 	ball.headingY = 1;
+	count = 1;
 
 	PlayersPad.x = 5;
 	PlayersPad.y = 12;
 	computersPad.x = 75;
 	computersPad.y = 12;
-
-
 
 	//displayCheatEnabled();
 
@@ -162,7 +164,8 @@ void Game::displayYouMissed()
 void Game::displayCheatEnabled()
 {
 	clrbox(10, 8, 70, 16, 79);
-	//box(10, 8, 70, 16, 31, 79, "Player vs. Computer");
+	char temp[] = "Player vs. Computer";
+	box(10, 8, 70, 16, 31, 79, temp);
 	gotoXY(15, 10); cout << "The Cheat' pad will track  ball movement' is enabled";
 	gotoXY(15, 11); cout << "press <TAB> to switch between 1 Player and 2 Players mode.";
 	gotoXY(15, 13); cout << "press press space to continue";
@@ -338,7 +341,7 @@ void Game::putbox(unsigned x, unsigned y, unsigned sx, unsigned sy,
 void Game::txtPlot(unsigned char x, unsigned char y, unsigned char Color)
 {
 	setTextColor(Color);
-	gotoXY(x, y); cout << "1";
+	gotoXY(x, y); cout << char(219);
 }
 //
 void  Game::txtSwap(int first, int second)

@@ -25,7 +25,7 @@ void drawPlay()
 		game.Keypressed();
 		game.gameLogic();
 		game.moveBall();
-		Sleep(50);
+		Sleep(50/game.count);
 		gotoXY(85, 10);
 		cout << "UP : up pad player 1";
 		gotoXY(85, 11);
