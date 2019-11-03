@@ -24,6 +24,12 @@
 #define key_DOWN 80
 #define key_LEFT 75
 #define key_RIGHT 77
+#define key_s 115
+#define key_w 119
+#define key_S 83
+#define key_W 87
+#define key_n 110
+#define key_N 78
 #define key_SPACE 32
 #define key_ENTER 13
 #define key_ESCAPE 27

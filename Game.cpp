@@ -14,13 +14,6 @@
 
 using namespace std;
 
-unsigned long   OldTicksPerSecond = GetTickCount(), NewTicksPerSecond = GetTickCount();
-unsigned long   PreferredFramesPerSecond;
-unsigned int frames = 0;
-float fps = 60.0f;
-float Refesh;
-float InverseFramesPerSecond;
-float OneFramePerSecond;
 
 
 Game::Game()
@@ -30,38 +23,49 @@ Game::~Game()
 {
 }
 
+// INPUT:
+// OUTPUT:
+// Di chuyen ball
 void Game::moveBall()
 {
-	txtPlot(ball.x, ball.y, 15);
-	txtLine(PlayersPad.x, PlayersPad.y, PlayersPad.x, PlayersPad.y + 3, 15);
-	txtLine(computersPad.x, computersPad.y, computersPad.x, computersPad.y + 3, 15);
+	txtPlot(ball.x, ball.y, DARK_YELLOW);
+	txtLine(PlayersPad.x, PlayersPad.y, PlayersPad.x, PlayersPad.y + 3, DARK_BLUE);
+	txtLine(computersPad.x, computersPad.y, computersPad.x, computersPad.y + 3, DARK_RED);
 }
+
 //
+// INPUT:
+// OUTPUT:
+// xoa ball cu
 void Game::removeBall()
 {
-	//Sleep( 9  );
 	txtPlot(ball.x, ball.y, 0);
 	txtLine(PlayersPad.x, PlayersPad.y, PlayersPad.x, PlayersPad.y + 3, 0);
 	txtLine(computersPad.x, computersPad.y, computersPad.x, computersPad.y + 3, 0);
 }
+
 //
+// INPUT:
+// OUTPUT:
+// Kiem tra game da ket thuc chua, xu li thang thua
 void Game::gameLogic()
 {
-	/* update ball's x location */
-	ball.x += ball.headingX;
-	/* update ball's y location */
+	
+	ball.x += ball.headingX;      //Cap nhat vi tri cua ball
 	ball.y += ball.headingY;
 
 
 
-	/* check if ball's location at top or bottom of screen,if true reverse ball's y heading */
-	if ((ball.y < SCREEN_TOP) || (ball.y > SCREEN_BOTTOM - 2)) ball.headingY = -ball.headingY;
+	//Kiem tra xem ball da cham tuong tren hoac duoi chua, neu co thi dao nguoc headingY
+	if ((ball.y < SCREEN_TOP) || (ball.y > SCREEN_BOTTOM - 2)) 
+		ball.headingY = -ball.headingY;
 
 	PlayersPad.LEFT = PlayersPad.y - 3;
 	PlayersPad.RIGHT = PlayersPad.y + 5;
 	computersPad.LEFT = computersPad.y - 3;
 	computersPad.RIGHT = computersPad.y + 5;
-	/* check if ball lands on pad, if true bounce back */
+
+	//Kiem tra su va cham cua ball va pad
 	if ((ball.y >= PlayersPad.LEFT) && (ball.y <= PlayersPad.RIGHT) && (ball.x == PlayersPad.x))
 	{
 
@@ -90,7 +94,7 @@ void Game::gameLogic()
 	}
 
 
-	/* check if ball misses pad, if true display you missed */
+	//Kiem tra neu ball khong cham pad
 	if (ball.x < SCREEN_LEFT)
 	{
 		displayYouMissed();
@@ -108,7 +112,10 @@ void Game::gameLogic()
 		playersScore += 10;
 	}
 }
-//
+
+// INPUT:
+// OUTPUT:
+// Khoi tao gia tri mac dinh cho cac bien trong tro choi
 void  Game::initGame()
 {
 
@@ -129,9 +136,9 @@ void  Game::initGame()
 
 	setTextColor(15);
 	clrscr();
-	txtLine(6, 0, 74, 0, 1);
-	txtLine(6, 22, 74, 22, 1);
-	txtLine(6, 23, 74, 23, 1);
+	txtLine(6, 0, 74, 0, GREY);
+	txtLine(6, 22, 74, 22, GREY);
+	txtLine(6, 23, 74, 23, GREY);
 
 
 	if (isPlayer2 > 0)
@@ -144,39 +151,38 @@ void  Game::initGame()
 	}
 
 }
+
 //
+// INPUT:
+// OUTPUT:
+// Xu li thua
 void Game::displayYouMissed()
 {
 	clrbox(10, 8, 70, 16, 79);
-	//box(10, 8, 70, 16, 31, 79, "You missed");
+	char a[] = "You missed";
+	box(10, 8, 70, 16, a);
 
 	gotoXY(18, 10); cout << " ";
 	gotoXY(18, 11); cout << "The ball has missed the paddle";
-	gotoXY(18, 12); cout << "press press space to continue";
-	gotoXY(18, 13); cout << "";
+	gotoXY(18, 12); cout << "Press SPACE to EXIT";
+	gotoXY(18, 13); cout << "Press any key to CONTINUE";
 	gotoXY(18, 14); cout << "";
 	keypressed = _getch();
+	if (keypressed == key_SPACE)
+	{
+		clrbox(10, 8, 70, 16, 79);
+
+		clrscr();
+		exit(0);
+	}
 	clrbox(10, 8, 75, 21, 0);
 
 
 }
-//
-void Game::displayCheatEnabled()
-{
-	clrbox(10, 8, 70, 16, 79);
-	char temp[] = "Player vs. Computer";
-	box(10, 8, 70, 16, 31, 79, temp);
-	gotoXY(15, 10); cout << "The Cheat' pad will track  ball movement' is enabled";
-	gotoXY(15, 11); cout << "press <TAB> to switch between 1 Player and 2 Players mode.";
-	gotoXY(15, 13); cout << "press press space to continue";
-	gotoXY(18, 14); cout << "";
-	gotoXY(18, 14); cout << "";
-	keypressed = _getch();
-	clrbox(10, 8, 75, 21, 0);
 
-
-}
-//
+// INPUT: 
+// OUTPUT: 
+// Xu li cac phim nhap vao tuong ung voi cac chuc nang
 void Game::Keypressed()
 {
 	if (_kbhit())
@@ -194,35 +200,43 @@ void Game::Keypressed()
 			break;
 
 		case key_UP:
-			PlayersPad.y -= 3; if (PlayersPad.y < 0) PlayersPad.y = 0;
+			computersPad.y -= 3; if (computersPad.y < 0)computersPad.y = 0;
 			break;
 
 		case key_DOWN:
+			computersPad.y += 3; if (computersPad.y > 18) computersPad.y = 18;
+			break;
+
+		case key_w:
+			PlayersPad.y -= 3; if (PlayersPad.y < 0) PlayersPad.y = 0;
+			break;
+
+		case key_s:
 			PlayersPad.y += 3; if (PlayersPad.y > 18) PlayersPad.y = 18;
 			break;
 
-		case 119:
-			computersPad.y -= 3; if (computersPad.y < 0) computersPad.y = 0;
+		case key_W:
+			PlayersPad.y -= 3; if (PlayersPad.y < 0) PlayersPad.y = 0;
 			break;
 
-		case 115:
-			computersPad.y += 3; if (computersPad.y > 18) computersPad.y = 18;
-			break;
-
-		case 87:
-			computersPad.y -= 3; if (computersPad.y < 0) computersPad.y = 0;
-			break;
-
-		case 83:
-			computersPad.y += 3; if (computersPad.y > 18) computersPad.y = 18;
+		case key_S:
+			PlayersPad.y += 3; if (PlayersPad.y > 18) PlayersPad.y = 18;
 			break;
 
 		case key_ENTER:
 			break;
 
 		case key_SPACE:
+			clrscr();
+			exit(0);
 			break;
 
+		case key_n: 
+			initGame();
+			break;
+		case key_N:
+			initGame();
+			break;
 		case key_TAB:
 			isPlayer2 = -isPlayer2;
 			if (isPlayer2 > 0)
@@ -241,35 +255,11 @@ void Game::Keypressed()
 	}
 
 }
-//
-void Game::Render_Game_At_60_Frames_Per_Second()
-{
-	
-	unsigned long DeltaTicksPerSecond = NewTicksPerSecond - OldTicksPerSecond;
-	frames++;
 
-	if (DeltaTicksPerSecond >= PreferredFramesPerSecond)
-	{
-
-
-		OldTicksPerSecond = NewTicksPerSecond;
-		InverseFramesPerSecond = 1 / ((float)PreferredFramesPerSecond / 1000.0f);
-		OneFramePerSecond = (float)frames * InverseFramesPerSecond;
-		fps += OneFramePerSecond;
-		fps /= 2;
-		setTextColor(31); gotoXY(70, 22); printf(" %d FPS ", DeltaTicksPerSecond); setTextColor(15);
-		frames = 0;
-		Refesh = 60 / fps;
-	}
-	Sleep(3);
-}
 //
-void Game::setForeGroundAndBackGroundColor(int ForeGroundColor, int BackGroundColor)
-{
-	int color = 16 * BackGroundColor + ForeGroundColor;
-	setTextColor(color);
-}
-//
+// INPUT:
+// OUTPUT:
+// Xoa console
 void Game::clrscr()
 {
 	COORD coordScreen = { 0, 0 };
@@ -286,8 +276,51 @@ void Game::clrscr()
 	SetConsoleCursorPosition(hConsole, coordScreen);
 	
 }
-//
-void Game::box(unsigned x, unsigned y, unsigned sx, unsigned sy, unsigned char col, unsigned char col2, char text_[])
+
+// INPUT:
+// OUTPUT:
+// tra ra gia tri bien PlayersScore: diem cua nguoi choi
+int Game::getPlayersScore()
+{
+	return playersScore;
+}
+
+// INPUT:
+// OUTPUT:
+// tra ra gia tri bien ComputerScore: diem cua may
+int Game::getComputersScore()
+{
+	return computersScore;
+}
+
+// INPUT:
+// OUTPUT:
+// tra ra so lan va cham cua ball va pad
+int Game::getCount()
+{
+	return count;
+}
+
+// INPUT:
+// OUTPUT:
+// gan gia tri cho bien isPlayer2: chuyen che do player hoac computer
+void Game::setIsPlayer2(int data)
+{
+	isPlayer2 = data;
+}
+
+// INPUT:
+// OUTPUT:
+// tra ra gia tri cho bien isPlayer2: chuyen che do player hoac computer
+int Game::getIsPlayer2()
+{
+	return isPlayer2;
+}
+
+// INPUT:
+// OUTPUT:
+// Tao ra mot hop van ban
+void Game::box(int x, int y, int sx, int sy,char text_[])
 {
 	unsigned i, j, m;
 	{
@@ -295,28 +328,32 @@ void Game::box(unsigned x, unsigned y, unsigned sx, unsigned sy, unsigned char c
 		m = (sx - x);                       //differential
 		j = m / 8;                          //adjust
 		j = j - 1;                          //more adjustment
-		gotoXY(x, y); cout << "1";       //Top left corner of box
-		gotoXY(sx, y); cout << "2";        //Top right corner of box
-		gotoXY(x, sy); cout << "3";        //Bottom left corner of box
-		gotoXY(sx, sy); cout << "4";     //Bottom right corner of box
+		gotoXY(x, y); cout << char(219);       //Top left corner of box
+		gotoXY(sx, y); cout << char(219);        //Top right corner of box
+		gotoXY(x, sy); cout << char(219);        //Bottom left corner of box
+		gotoXY(sx, sy); cout << char(219);     //Bottom right corner of box
 
 		for (i = x + 1; i < sx; i++)
 		{
-			gotoXY(i, y); cout << "5";       // Top horizontol line
-			gotoXY(i, sy); cout << "5";     // Bottom Horizontal line
+			gotoXY(i, y); cout << char(219);       // Top horizontol line
+			gotoXY(i, sy); cout << char(219);     // Bottom Horizontal line
 		}
 
 		for (i = y + 1; i < sy; i++)
 		{
-			gotoXY(x, i); cout << "6";       //Left Vertical line
-			gotoXY(sx, i); cout << "6";       //Right Vertical Line
+			gotoXY(x, i); cout << char(219);       //Left Vertical line
+			gotoXY(sx, i); cout << char(219);       //Right Vertical Line
 		}
 
 		gotoXY(x + j, y); cout << text_;    //put Title
 		gotoXY(1, 24);
 	}
 }
+
 //
+// INPUT:
+// OUTPUT:
+// Xoa hop van ban
 void Game::clrbox(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char bkcol)
 {
 	int x, y;
@@ -330,40 +367,20 @@ void Game::clrbox(unsigned char x1, unsigned char y1, unsigned char x2, unsigned
 		}
 	}
 }
+
 //
-void Game::putbox(unsigned x, unsigned y, unsigned sx, unsigned sy,
-	unsigned char col, unsigned char col2, unsigned char bkcol, char text_[])
-{
-	clrbox(x, y, sx, sy, bkcol);
-	box(x, y, sx, sy, col, col2, text_);
-}
+// INPUT:
+// OUTPUT:
+// Ve mot ki tu tai mot vi tri truyen vao
 //
 void Game::txtPlot(unsigned char x, unsigned char y, unsigned char Color)
 {
 	setTextColor(Color);
 	gotoXY(x, y); cout << char(219);
 }
-//
-void  Game::txtSwap(int first, int second)
-{
-	int  temp;
 
-
-	temp = first;
-	first = second;
-	second = temp;
-}
 //
-void Game::txtCircle(int X, int Y, int rad, int col)
-{
-	float deg = 0;
-	do {
-		X = (int)(rad * cos(deg));
-		Y = (int)(rad * sin(deg));
-		txtPlot(40 + X, 12 + Y, col);
-		deg += 0.005;
-	} while (deg <= 6.4);
-}
+//
 //
 void Game::txtLine(int x0, int y0, int x1, int y1, int color)
 {
@@ -406,19 +423,5 @@ void Game::txtLine(int x0, int y0, int x1, int y1, int color)
 	}
 }
 //
-void Game::delay(unsigned int milliseconds)
-{
-	clock_t ticks1, ticks2;
-	unsigned int tic1 = 0, tic2 = 0, tick = 0;
 
-	ticks1 = clock();
-	while (tick < milliseconds)
-	{
-		ticks2 = clock();
-		tic1 = ticks2 / CLOCKS_PER_SEC - ticks1;
-		tic2 = ticks1 / CLOCKS_PER_SEC;
-		tick = ticks2 - ticks1;
-	}
-	ticks2 = clock();
-}
 

@@ -12,7 +12,9 @@ using namespace std;
 
 Game game;
 void draw();
-
+// INPUT:
+// OUTPUT:
+// Vong lap chinh cua game
 void drawPlay()
 {
 	game.clrscr();
@@ -20,30 +22,70 @@ void drawPlay()
 
 	char keyPressed;
 	keyPressed = _getch();
+	
 	while (keyPressed != key_ESCAPE)
 	{
 		game.Keypressed();
 		game.gameLogic();
 		game.moveBall();
-		Sleep(50/game.count);
+		Sleep(50/game.getCount());
+
+		setTextColor(DARK_YELLOW);
+		ifstream fileTitle("pong.txt", ios::in | ios::out);
+		int xTitle = SCREEN_RIGHT + 1;
+		int yTitle = 0;
+		while (!fileTitle.eof())
+		{
+			char lineTemp[255] = "";
+			fileTitle.getline(lineTemp, 255);
+			gotoXY(xTitle, yTitle);
+			cout << lineTemp << endl;
+			yTitle++;
+		}
+		
+
+		setTextColor(DARK_CYAN);
 		gotoXY(85, 10);
-		cout << "UP : up pad player 1";
+		cout << "W : up pad player 1";
 		gotoXY(85, 11);
-		cout << "DOWN : down pad player 1";
-		gotoXY(85, 12);
-		cout << "W : up pad player 2";
+		cout << "S : down pad player 1";
 		gotoXY(85, 13);
-		cout << "S : up pad player 2";
+		cout << "UP : up pad player 2";
 		gotoXY(85, 14);
+		cout << "DOWN : up pad player 2";
+		gotoXY(85, 16);
 		cout << "TAB : switch between the mode";
+		gotoXY(85, 17);
+		cout << "N: new game";
 		gotoXY(45, 15);
 		game.removeBall();
-		setTextColor(31); gotoXY(7, 22); cout << "ball  X=%d,Y=%d " << game.ball.x << game.ball.y; setTextColor(15);
-		setTextColor(31); gotoXY(7, 23); cout << "pad   X=%d,Y=%d " << game.PlayersPad.x << game.PlayersPad.y; setTextColor(15);
-		setTextColor(31); gotoXY(32, 22); cout << "Your Score:       %d " << game.playersScore; setTextColor(15);
-		setTextColor(79); gotoXY(32, 23); cout << "Computers Score:  %d " << game.computersScore; setTextColor(15);
+
+		
+		if (game.getIsPlayer2() == -1)
+		{
+			gotoXY(20, 22);
+			cout << "                       ";
+			gotoXY(20, 23);
+			cout << "                       ";
+			setTextColor(31); gotoXY(20, 22); cout << "Your Score:             " << game.getPlayersScore(); setTextColor(15);
+			setTextColor(79); gotoXY(20, 23); cout << "Computers Score:        " << game.getComputersScore(); setTextColor(15);
+		}
+		else
+		{
+			gotoXY(20, 22);
+			cout << "                        ";
+			gotoXY(20, 23);
+			cout << "                        ";
+			setTextColor(31); gotoXY(20, 22); cout << "Player1 Score:          " << game.getPlayersScore(); setTextColor(15);
+			setTextColor(79); gotoXY(20, 23); cout << "Player2 Score:          " << game.getComputersScore(); setTextColor(15);
+		}
 	}
 }
+
+//
+// INPUT:
+// OUTPUT:
+// ve man hinh NEWGAME, goi cac ham tuong ung voi cac lua chon 1 PLAYER hoac 2 PLAYERS
 void newgame()
 {
 	setTextColor(GREY);
@@ -125,9 +167,9 @@ void newgame()
 		if (int(keyPressed) == 13)  //enter
 		{
 			if (curPosPointer == 40) {
-				game.isPlayer2 = 1;
+				game.setIsPlayer2(1);
 			}
-			else game.isPlayer2 = -1;
+			else game.setIsPlayer2(-1);
 			drawPlay();
 		}
 		if (keyPressed == 'e' || int(keyPressed) == 27) //esc
@@ -140,6 +182,10 @@ void newgame()
 	}
 }
 
+
+// INPUT:
+// OUTPUT:
+// ve man hinh khoi dau cua game, goi cac ham tuong ung voi cac lua chon
 void draw()
 {
 	setTextColor(GREY);
